@@ -6,10 +6,24 @@ import { products } from "@/data/products";
 
 export default function ProductGrid() {
   const [search, setSearch] = useState("");
+const [category, setCategory] = useState("All");
+const [sort, setSort] = useState("default");
 
-  const filteredProducts = products.filter((product) =>
+  const filteredProducts = [...products]
+  .filter((product) =>
     product.name.toLowerCase().includes(search.toLowerCase())
-  );
+  )
+  .filter((product) => {
+    if (category === "All") return true;
+    if (category === "Popular") return product.isPopular;
+    if (category === "Limited") return product.isLimited;
+    return product.category === category;
+  })
+  .sort((a, b) => {
+    if (sort === "low") return a.price - b.price;
+    if (sort === "high") return b.price - a.price;
+    return 0;
+  });
 
   return (
     <section className="bg-pink-50 px-8 py-16">
@@ -31,7 +45,35 @@ export default function ProductGrid() {
             className="w-full max-w-xl rounded-2xl border-2 border-pink-300 bg-white px-6 py-4 text-lg text-gray-800 shadow-lg transition-all duration-200 placeholder:text-gray-500 focus:border-pink-500 focus:ring-4 focus:ring-pink-200 focus:outline-none"
           />
         </div>
+<div className="mb-10 flex flex-col items-center justify-between gap-4 md:flex-row">
 
+  <div className="flex flex-wrap gap-3">
+    {["All", "Angel", "Monster", "Popular", "Limited"].map((item) => (
+      <button
+        key={item}
+        onClick={() => setCategory(item)}
+        className={`rounded-full px-5 py-2 font-medium transition ${
+          category === item
+            ? "bg-pink-500 text-white"
+            : "bg-white text-gray-700 hover:bg-pink-100"
+        }`}
+      >
+        {item}
+      </button>
+    ))}
+  </div>
+
+  <select
+    value={sort}
+    onChange={(e) => setSort(e.target.value)}
+    className="rounded-xl border border-pink-300 bg-white px-4 py-2 text-gray-700 shadow"
+  >
+    <option value="default">Sort By</option>
+    <option value="low">Price: Low → High</option>
+    <option value="high">Price: High → Low</option>
+  </select>
+
+</div>
         {filteredProducts.length === 0 ? (
           <div className="rounded-2xl bg-white py-16 text-center shadow-md">
             <h3 className="text-2xl font-semibold text-gray-700">

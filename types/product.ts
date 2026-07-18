@@ -3,4 +3,7 @@ export type Product = {
   name: string;
   price: number;
   image: string;
+  category: "Angel" | "Monster";
+  isPopular: boolean;
+  isLimited: boolean;
 };
