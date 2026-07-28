@@ -26,7 +26,10 @@ const [sort, setSort] = useState("default");
   });
 
   return (
-    <section className="bg-pink-50 px-8 py-16">
+   <section
+  id="products"
+  className="bg-pink-50 px-8 py-20"
+>
       <div className="mx-auto max-w-7xl">
         <h2 className="mb-3 text-center text-4xl font-bold text-gray-800">
           Featured Products
