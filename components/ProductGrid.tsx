@@ -1,13 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { products } from "@/data/products";
+import ProductSkeleton from "./ProductSkeleton";
 
 export default function ProductGrid() {
   const [search, setSearch] = useState("");
 const [category, setCategory] = useState("All");
 const [sort, setSort] = useState("default");
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setLoading(false);
+  }, 800);
+
+  return () => clearTimeout(timer);
+}, []);
 
   const filteredProducts = [...products]
   .filter((product) =>
@@ -77,26 +87,38 @@ const [sort, setSort] = useState("default");
   </select>
 
 </div>
-        {filteredProducts.length === 0 ? (
-          <div className="rounded-2xl bg-white py-16 text-center shadow-md">
-            <h3 className="text-2xl font-semibold text-gray-700">
-              No products found
-            </h3>
+        {loading ? (
 
-            <p className="mt-3 text-gray-500">
-              Try searching with another keyword.
-            </p>
-          </div>
-        ) : (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-              />
-            ))}
-          </div>
-        )}
+  <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    {Array.from({ length: 6 }).map((_, index) => (
+      <ProductSkeleton key={index} />
+    ))}
+  </div>
+
+) : filteredProducts.length === 0 ? (
+
+  <div className="rounded-2xl bg-white py-16 text-center shadow-md">
+    <h3 className="text-2xl font-semibold text-gray-700">
+      No products found
+    </h3>
+
+    <p className="mt-3 text-gray-500">
+      Try searching with another keyword.
+    </p>
+  </div>
+
+) : (
+
+  <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    {filteredProducts.map((product) => (
+      <ProductCard
+        key={product.id}
+        product={product}
+      />
+    ))}
+  </div>
+
+)}
       </div>
     </section>
   );

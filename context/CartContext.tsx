@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { Product } from "@/types/product";
+import toast from "react-hot-toast";
 
 export type CartItem = Product & {
   quantity: number;
@@ -43,50 +44,76 @@ useEffect(() => {
 }, [cart]);
 
   function addToCart(product: Product) {
-    setCart((currentCart) => {
-      const existingProduct = currentCart.find(
-        (item) => item.id === product.id
-      );
+  const exists = cart.find((item) => item.id === product.id);
 
-      if (existingProduct) {
-        return currentCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-
-      return [...currentCart, { ...product, quantity: 1 }];
-    });
+  if (exists) {
+    toast.success(`${product.name} quantity updated 🛒`);
+  } else {
+    toast.success(`${product.name} added to cart 🛍️`);
   }
 
-  function increaseQuantity(id: number) {
-    setCart((currentCart) =>
-      currentCart.map((item) =>
-        item.id === id
+  setCart((currentCart) => {
+    const existing = currentCart.find(
+      (item) => item.id === product.id
+    );
+
+    if (existing) {
+      return currentCart.map((item) =>
+        item.id === product.id
           ? { ...item, quantity: item.quantity + 1 }
           : item
-      )
-    );
+      );
+    }
+
+    return [...currentCart, { ...product, quantity: 1 }];
+  });
+}
+
+  function increaseQuantity(id: number) {
+  const product = cart.find((item) => item.id === id);
+
+  if (product) {
+    toast.success(`${product.name} quantity increased ➕`);
   }
+
+  setCart((currentCart) =>
+    currentCart.map((item) =>
+      item.id === id
+        ? { ...item, quantity: item.quantity + 1 }
+        : item
+    )
+  );
+}
 
   function decreaseQuantity(id: number) {
-    setCart((currentCart) =>
-      currentCart
-        .map((item) =>
-          item.id === id
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
+  const product = cart.find((item) => item.id === id);
+
+  if (product) {
+    toast(`${product.name} quantity decreased ➖`);
   }
 
+  setCart((currentCart) =>
+    currentCart
+      .map((item) =>
+        item.id === id
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+      .filter((item) => item.quantity > 0)
+  );
+}
+
   function removeFromCart(id: number) {
-    setCart((currentCart) =>
-      currentCart.filter((item) => item.id !== id)
-    );
+  const product = cart.find((item) => item.id === id);
+
+  if (product) {
+    toast.error(`${product.name} removed from cart 🗑️`);
   }
+
+  setCart((currentCart) =>
+    currentCart.filter((item) => item.id !== id)
+  );
+}
 
   return (
     <CartContext.Provider

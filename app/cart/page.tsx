@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import toast from "react-hot-toast";
 
 export default function CartPage() {
   const {
@@ -28,13 +29,29 @@ export default function CartPage() {
 
           {cart.length === 0 ? (
             <div className="rounded-2xl bg-white p-10 text-center shadow-md">
-              <p className="mb-6 text-xl text-gray-600">
-                Your cart is empty.
-              </p>
+              <div className="mb-6 text-7xl">
+  🛍️
+</div>
+
+<p className="mb-6 text-xl font-medium text-gray-600">
+  Your cart is empty.
+</p>
 
               <Link
                 href="/"
-                className="inline-block rounded-xl bg-pink-500 px-6 py-3 text-white hover:bg-pink-600"
+                className="
+inline-block
+rounded-xl
+bg-pink-500
+px-6
+py-3
+font-semibold
+text-white
+transition-all
+duration-300
+hover:scale-105
+hover:bg-pink-600
+"
               >
                 Continue Shopping
               </Link>
@@ -66,17 +83,42 @@ export default function CartPage() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 rounded-xl bg-gray-100 p-2">
                     <button
-                      onClick={() => decreaseQuantity(item.id)}
-                      className="rounded-lg bg-gray-200 px-3 py-1 text-xl font-bold text-gray-800 hover:bg-gray-300"
-                    >
-                      −
-                    </button>
+  disabled={item.quantity === 1}
+  onClick={() => decreaseQuantity(item.id)}
+  className="
+    rounded-lg
+    bg-gray-200
+    px-3
+    py-1
+    text-xl
+    font-bold
+    text-gray-800
+    hover:bg-gray-300
+    disabled:cursor-not-allowed
+    disabled:opacity-40
+  "
+>
+  −
+</button>
 
-                    <span className="min-w-6 text-center font-semibold">
-                      {item.quantity}
-                    </span>
+                    <span
+  className="
+    flex
+    h-10
+    min-w-[40px]
+    items-center
+    justify-center
+    rounded-lg
+    bg-rose-50
+    text-lg
+    font-bold
+    text-gray-900
+  "
+>
+  {item.quantity}
+</span>
 
                     <button
                       onClick={() => increaseQuantity(item.id)}
@@ -96,13 +138,22 @@ export default function CartPage() {
               ))}
 
               <div className="rounded-2xl bg-white p-8 text-right shadow-md">
-                <p className="mb-5 text-2xl font-bold text-gray-800">
-                  Total: ${totalPrice.toFixed(2)}
-                </p>
+                <p className="mb-2 text-sm uppercase tracking-widest text-gray-400">
+  Order Total
+</p>
 
-                <button className="rounded-xl bg-pink-500 px-8 py-3 font-semibold text-white hover:bg-pink-600">
-                  Checkout
-                </button>
+<p className="mb-6 text-4xl font-black text-rose-500">
+  ${totalPrice.toFixed(2)}
+</p>
+
+                <button
+  onClick={() =>
+    toast.success("🚀 Demo checkout coming soon!")
+  }
+  className="rounded-xl bg-pink-500 px-8 py-3 font-semibold text-white transition hover:bg-pink-600 hover:scale-105"
+>
+  Checkout
+</button>
               </div>
             </div>
           )}

@@ -3,6 +3,10 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/Navbar";
+import { WishlistProvider } from "@/context/WishlistContext";
+import { Toaster } from "react-hot-toast";
+import { RecentlyViewedProvider } from "@/context/RecentlyViewedContext";
+
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -27,9 +31,31 @@ export default function RootLayout({
 >
       <body className="min-h-screen bg-rose-50 font-[var(--font-outfit)] text-gray-900">
   <CartProvider>
-    <Navbar />
-    {children}
-  </CartProvider>
+  <WishlistProvider>
+    <RecentlyViewedProvider>
+
+      <Navbar />
+
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 2500,
+          style: {
+            background: "#fff",
+            color: "#111827",
+            borderRadius: "18px",
+            padding: "16px",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
+          },
+        }}
+      />
+
+      {children}
+
+    </RecentlyViewedProvider>
+  </WishlistProvider>
+</CartProvider>
 </body>
     </html>
   );
